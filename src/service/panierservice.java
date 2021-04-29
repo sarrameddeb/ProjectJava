@@ -6,6 +6,7 @@
 package service;
 
 import entite.panier;
+import entite.reservation_med;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import utils.datasource;
 
 /**
@@ -29,33 +32,30 @@ public class panierservice {
     connection= datasource.getInstance().getcnx();}
     
     
-    public void ajoutpanier(panier p) {
-   String req="insert into panier (id,idmed,nommed,prixmed) values(id='"+p.getId()+"',idmed='"+p.getIdmed()+"',nommed='"+p.getNommed()+"',prixmed='"+p.getPrixmed()+"')";
-        try {
+    public void ajoutpanier(panier p, int q) throws SQLException {
+        
+               String req="INSERT INTO `panier` (`id`, `idmed`, `nommed`, `prixmed`,`id_user`) VALUES (NULL,'"+p.getIdmed()+"', '"+p.getNommed()+"', '"+p.getPrixmed()*q+ "', '"+p.getId_user()+ "');";
+
             ste= connection.createStatement();
              ste.executeUpdate(req);
              System.out.println("panier remplis");
     
-        } catch (SQLException ex) {
-            Logger.getLogger(panierservice.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
-   public List<panier> showpanier(){
-        String requete="select* from panier";
-          List <panier>List=new ArrayList<>();
-      try {ste=connection.createStatement();
-           ste.executeQuery(requete);
+   public List<panier> showpanier(String id) throws SQLException{
+        String requete="SELECT*FROM `panier` WHERE `id_user`='"+id+"'";
+      ObservableList<panier>  List = FXCollections.observableArrayList();
+    ste=connection.createStatement();
+          ResultSet rs = ste.executeQuery(requete);
          
            while(rs.next()){
-           List.add(new panier(rs.getInt("id"),rs.getInt("idmed"),rs.getString("nommed"),rs.getFloat("prixmed") ));
+           List.add(new panier(rs.getString("id"),rs.getInt("idmed"),rs.getString("nommed"),rs.getFloat("prixmed"),rs.getString("2")));
           }     
-        } catch (SQLException ex) {
-            Logger.getLogger(panierservice.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
         return List;
 }
       
-     public void deletepanier(int id){
+     public void deletepanier(String id){
     String requete="delete from panier WHERE id='"+id+"'";
         try {
             ste=connection.createStatement();
@@ -66,31 +66,27 @@ public class panierservice {
         }
      }
      
-       public void updatePanier() {
-       try {
-            String requete = "UPDATE panier SET nommed='aspique',prixmed='8.0' WHERE id=1";
-            PreparedStatement pst = connection.prepareStatement(requete);
-            pst.executeUpdate();
+       public void updatePanier(String id ,String change) throws SQLException {
+       
+            String requete = "UPDATE `panier` SET `nommed`='"+change+"' WHERE `id`='"+id+"'";
+        ste=connection.createStatement();
+            ste.executeUpdate(requete);
             System.out.println("Panier modifiée");
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
+        
     }
     
-        public void calcultotalpanier(int id ){
-           String  req="Select ('prixmed'+('prixmed'*0.19)))* 'quantity' from panier WHERE id='"+id+"'";
-        try {
+        public double calcultotalpanier(String id) throws SQLException{
+          
+           String  req="SELECT SUM(`prixmed`) FROM `panier` WHERE `id_user`='"+id+"'";
+         double Total=0;
             ste= connection.createStatement();
-            ste.executeQuery(req); {
-            while(rs.next());
-          System.out.println(rs.getFloat("(prixmed`+(prixmed`*0.19))*quantity"));
+           ResultSet rs= ste.executeQuery(req); 
+            while(rs.next()){
+          Total =  (rs.getFloat(1)*1.19);
+          
+        }   
+            return Total;
         }
-        } catch (SQLException ex) {
-            Logger.getLogger(panierservice.class.getName()).log(Level.SEVERE, null, ex);
-        }  
-            
-        }
-        
         
 
 }

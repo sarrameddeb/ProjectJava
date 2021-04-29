@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import utils.datasource;
 
 /**
@@ -27,18 +29,15 @@ public class reservationservice {
     public reservationservice() {
       connection=datasource.getInstance().getcnx();
 }
-    public void ajoutreservation(reservation_med r){
-    String requete="insert into reservation_med (id_med,nom_med,id_patient,id_phar)values(id_med='"+r.getId_med()+"',nom_med='"+r.getNom_med()+"',id_patient='"+
-            r.getId_patient()+"',id_phar='"+r.getId_phar()+"')";
-        try {
+    public void ajoutreservation(reservation_med r) throws SQLException{
+    String requete="INSERT INTO `reservation_med` (`id`, `id_med`, `nom_med`, `id_phar`, `id_patient`) VALUES (NULL, '"+r.getId_med()+"', '"+r.getNom_med()+"', '"+r.getId_phar()+"', '"+r.getId_patient()+"');";
+     
             ste=connection.createStatement();
             ste.executeUpdate(requete);
             System.out.println("reservation ajoutee");
-        } catch (SQLException ex) {
-            Logger.getLogger(reservationservice.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
-    public void deleteresrvation(int id){
+    public void deleteresrvation(String id){
     String requete="delete from reservation_med WHERE id='"+id+"'";
         try {
             ste=connection.createStatement();
@@ -51,27 +50,22 @@ public class reservationservice {
         }
     }
 
-        public List<reservation_med> affiche(){
-        String requete="select* from reservation_med";
-          List <reservation_med >List=new ArrayList<>();
-        try {
-            ste=connection.createStatement();
-            ste.executeQuery(requete);
+        public List<reservation_med> affiche(String id) throws SQLException{
+        String requete="SELECT * FROM `reservation_med` WHERE `id_patient`='"+id+"'";
+        ObservableList<reservation_med>  List = FXCollections.observableArrayList();
+         ste=connection.createStatement();
+          ResultSet rs=  ste.executeQuery(requete);
               while(rs.next()){
-           List.add(new reservation_med(rs.getInt("id"),rs.getString("id_med"),rs.getString("nom_med"),rs.getString("id_patient"),rs.getString("id_phar")));
+           List.add(new reservation_med(rs.getString("id"),rs.getString("id_med"),rs.getString("nom_med"),rs.getString("id_patient"),rs.getString("id_phar")));
               }
-        } catch (SQLException ex) {
-            Logger.getLogger(reservationservice.class.getName()).log(Level.SEVERE, null, ex);
-        }
         return List;
         }
         
    
     
-           public void ModifierReservaton(int id,String id_med, String nom_med,  String id_patient,  String  id_phar){
+           public void ModifierReservaton(String id,String nom_med){
            
-            String requete="Update reservation_med SET nom_med='"+nom_med
-                    +"' where id="+id ;
+            String requete="UPDATE `reservation_med` SET `nom_med`='"+nom_med+"' WHERE `id`='"+id+"' ;";
         try {
              ste=connection.createStatement();
             int rs=ste.executeUpdate(requete);

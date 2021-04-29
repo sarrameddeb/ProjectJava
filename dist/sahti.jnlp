@@ -8,8 +8,11 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="lib\controlsfx-8.40.11.jar" size="985420" download="eager" />
+    <jar href="lib\javax.mail.jar" size="659033" download="eager" />
     <jar href="lib\mysql-connector-java-5.1.23-bin.jar" size="834126" download="eager" />
-    <jar href="sahti.jar" size="14800" download="eager" />
+    <jar href="lib\pdfa-7.1.4.jar" size="46940" download="eager" />
+    <jar href="sahti.jar" size="10940694" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="sahti" >
     <param name="requiredFXVersion" value="8.0+"/>

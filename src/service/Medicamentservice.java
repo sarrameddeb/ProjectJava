@@ -16,6 +16,8 @@ import static java.util.Collections.list;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import utils.datasource;
 
 /**
@@ -23,47 +25,51 @@ import utils.datasource;
  * @author ACER
  */
 public class Medicamentservice {
+
+   
+
+   
     private Statement ste ;
     private PreparedStatement pst ;
     private  Connection connection ;
     private ResultSet rs ;
     public Medicamentservice(){
+        
     connection=datasource.getInstance().getcnx();
     }
-    public void AjouterMedicaments(medicaments  m){
+    public void AjouterMedicaments(medicaments  m) throws SQLException{
   String req="insert into  medicaments (nom,description,prix,quantity,img,id_pharmacie) values('"+m.getNom()+"','"+m.getDescription()+"','"+m.getPrix()+"','"+m.getQuantity()+"','"+m.getImg()+"','"+m.getId_pharmacie()+"')";
-        try {
+        
             ste= connection.createStatement();
             ste.executeUpdate(req);
             System.out.println("ajouter avec succee");
-        } catch (SQLException ex) {
-            Logger.getLogger(Medicamentservice.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
     }
-    //public void AjouterMedicamentsPST(medicaments m){
-    //String req="insert into  medicaments (nom,description,prix,quantity,img,id_pharmacie)values(?,?,?,?,?,?)";
-       // try {
-           // pst=connection.prepareStatement(req);
-           // pst.setString(1, m.getNom());
-            // pst.setString(2, m.getDescription());
-             //pst.setFloat(3, m.getPrix());
-              //pst.setInt(4, m.getQuantity());
-              //  pst.setString(5, m.getImg());
-                //pst.setInt(6, m.getId_pharmacie());
-                // pst.executeUpdate();
-                    //} catch (SQLException ex) {
-           // Logger.getLogger(Medicamentservice.class.getName()).log(Level.SEVERE, null, ex);
-       // }
-    //}
-    public List <medicaments> readAll(String nom){
-        String req="select* from medicaments WHERE nom='"+nom+"'";
-        List <medicaments>List=new ArrayList<>();
+//    public void AjouterMedicamentsPST(medicaments m){
+//    String req="insert into  medicaments (nom,description,prix,quantity,img,id_pharmacie)values(?,?,?,?,?,?)";
+//        try {
+//            pst=connection.prepareStatement(req);
+//            pst.setString(1, m.getNom());
+//             pst.setString(2, m.getDescription());
+//             pst.setFloat(3, m.getPrix());
+//              pst.setInt(4, m.getQuantity());
+//                pst.setString(5, m.getImg());
+//                pst.setString(6, m.getId_pharmacie());
+//                 pst.executeUpdate();
+//                 System.out.println("ajout réuissie");
+//                    } catch (SQLException ex) {
+//            Logger.getLogger(Medicamentservice.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+    public List <medicaments> readAll(){
+        String req="select* from medicaments ";
+        List <medicaments> List=new ArrayList<>();
         try {
             ste=connection.createStatement();
             rs=ste.executeQuery(req);
             
             while(rs.next()){
-                List.add(new medicaments(rs.getInt("id"),rs.getString("nom"),rs.getString("description"),rs.getFloat("prix"),rs.getInt("quantity"),rs.getString("img"),rs.getInt("id_pharmacie")));
+                List.add(new medicaments(rs.getString("id"),rs.getString("nom"),rs.getString("description"),rs.getFloat("prix"),rs.getInt("quantity"),rs.getString("img"),rs.getString("id_pharmacie")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(Medicamentservice.class.getName()).log(Level.SEVERE, null, ex);
@@ -71,9 +77,9 @@ public class Medicamentservice {
         }
         return List;
     }
-    public void UpdateMedicaments(int id, String nom, String description,Float prix, int quantity, String img, int id_pharmacie){
+    public void UpdateMedicaments(String id, String nom){
         try{
-            String req="Update medicaments SET nom='"+nom+"', description='"+description+"',prix='"+prix+"',quantity='"+quantity+"', img='"+img+"',id_pharmacie='"+id_pharmacie+"' WHERE id="+id ;
+            String req="Update medicaments SET nom='"+nom+"' WHERE id="+id ;
             ste=connection.createStatement();
           int  rs=ste.executeUpdate(req);
          
@@ -82,7 +88,7 @@ public class Medicamentservice {
             Logger.getLogger(Medicamentservice.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
-       public  void DeleteMedicaments(int id){
+       public  void DeleteMedicaments(String id){
            String req="DELETE from medicaments WHERE id="+id;
             try {
             ste=connection.createStatement();
@@ -96,24 +102,20 @@ public class Medicamentservice {
         } 
            
        }
-        public void RechercherMedicaments(String nom){
-           
-            String req="SELECT* FROM medicaments WHERE nom='"+nom+"'";
-            try {
-            ste=connection.createStatement();
-            rs= ste.executeQuery(req);
-            rs.last();
-            int nbRow= rs.getRow();
-            if (nbRow !=0){
-          System.out.println("le medicament est trouvé");
-            }
-            else {
-                System.out.println("le medicament non trouvé");
-            }
-        }catch (SQLException ex) {
-            Logger.getLogger(Medicamentservice.class.getName()).log(Level.SEVERE, null, ex);
+       public List<medicaments> Search(String mychar) throws SQLException {
+             ObservableList<medicaments>  form  = FXCollections.observableArrayList();
+     
+     String req= "SELECT * FROM `medicaments` WHERE `nom` LIKE '" + mychar + "' ";
+     ste= connection.createStatement();
+     rs=ste.executeQuery(req);
+       
+         while(rs.next()){
+            form.add(new medicaments(rs.getString("id"),rs.getString("nom"),rs.getString("description"),rs.getFloat("prix"),rs.getInt("quantity"),rs.getString("img"),rs.getString("id_pharmacie")));
         }
-        }
+        return form;
+    }
+        
+
         public List<medicaments> TriMed()
       {
        String req="SELECT * FROM medicaments\n" +
@@ -124,13 +126,17 @@ public class Medicamentservice {
                ste=connection.createStatement();
                rs=ste.executeQuery(req);
                while(rs.next()){
-                   list.add(new medicaments(rs.getInt("id"),rs.getString("nom"),rs.getString("description"),rs.getFloat("prix"),rs.getInt("quantity"),rs.getString("img"),rs.getInt("id_pharmacie")));
+                   list.add(new medicaments(rs.getString("id"),rs.getString("nom"),rs.getString("description"),rs.getFloat("prix"),rs.getInt("quantity"),rs.getString("img"),rs.getString("id_pharmacie")));
                }
            } catch (SQLException ex) {
                Logger.getLogger(Medicamentservice.class.getName()).log(Level.SEVERE, null, ex);
            } return list;
       }
-}
+
+    
+ 
+    }
+
           
    
    

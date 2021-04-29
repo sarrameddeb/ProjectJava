@@ -5,20 +5,34 @@
  */
 package entite;
 
+import java.util.Objects;
+
 /**
  *
  * @author ACER
  */
 public class medicaments {
-    private int id ; 
+    private String id ; 
     private String nom;
     private String description; 
     private float prix ; 
     private int quantity; 
     private String img ;
-    private int id_pharmacie;
+    private String id_pharmacie;
 
-    public medicaments(int id, String nom, String description, float prix, int quantity, String img,int id_pharmacie) {
+    public medicaments(String nom, String description, float prix, int quantity, String img, String id_pharmacie) {
+        this.nom = nom;
+        this.description = description;
+        this.prix = prix;
+        this.quantity = quantity;
+        this.img = img;
+        this.id_pharmacie = id_pharmacie;
+    }
+
+   
+   
+
+    public medicaments(String id, String nom, String description, float prix, int quantity, String img, String id_pharmacie) {
         this.id = id;
         this.nom = nom;
         this.description = description;
@@ -27,20 +41,26 @@ public class medicaments {
         this.img = img;
         this.id_pharmacie = id_pharmacie;
     }
-       public medicaments( String nom, String description, float prix, int quantity, String img, int idpharmacie) {
-        this.nom = nom;
-        this.description = description;
-        this.prix = prix;
-        this.quantity = quantity;
-        this.img = img;
+
+    public medicaments(String string, String string0, String string1, float aFloat) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
+
+    public String getId_pharmacie() {
+        return id_pharmacie;
+    }
+
+    public void setId_pharmacie(String id_pharmacie) {
         this.id_pharmacie = id_pharmacie;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -84,16 +104,6 @@ public class medicaments {
         this.img = img;
     }
 
-    public int getId_pharmacie() {
-        return id_pharmacie;
-    }
-
-    public void setIdpharmacie(int id_pharmacie) {
-        this.id_pharmacie = id_pharmacie;
-    }
-
-  
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -106,15 +116,27 @@ public class medicaments {
             return false;
         }
         final medicaments other = (medicaments) obj;
-        if (this.id != other.id) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
     }
+    
 
     @Override
     public String toString() {
-        return "medicaments{" + "id=" + id + ", nom=" + nom + ", description=" + description + ", prix=" + prix + ", quantity=" + quantity + ", img=" + img + ", id_pharmacie=" + id_pharmacie+ '}';
+        return "medicaments{" + "id=" + id + ", nom=" + nom + ", description=" + description + ", prix=" + prix + ", quantity=" + quantity + ", img=" + img + ", id_pharmacie=" + id_pharmacie + '}';
     }
+
+   
+
+    public void getPrenomProperty() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void getNomProperty() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
 }

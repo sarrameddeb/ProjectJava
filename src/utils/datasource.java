@@ -5,15 +5,24 @@
  */
 package utils;
 
+import entite.medicaments;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import service.Medicamentservice;
 
 /**
  *
  * @author ACER
+ * 
  */
 public class datasource {
        private String url="jdbc:mysql://127.0.0.1/based2"; 
@@ -21,6 +30,8 @@ public class datasource {
     private String pwd=""; 
     private Connection cnx; 
     private static datasource instance ; 
+    
+
    private datasource(){
         
            try {
@@ -40,5 +51,6 @@ public class datasource {
    public  Connection getcnx(){
        return cnx;
    }
-}
 
+  
+}

@@ -10,13 +10,13 @@ package entite;
  * @author ACER
  */
 public class reservation_med {
-    	private int id ;	
+    	private String id ;	
         private String id_med ; 
         private String  nom_med ; 	
         private String id_patient; 	  
         private String id_phar ; 
 
-    public reservation_med(int id, String id_med, String nom_med, String id_patient, String id_phar) {
+    public reservation_med(String id, String id_med, String nom_med, String id_patient, String id_phar) {
         this.id = id;
         this.id_med = id_med;
         this.nom_med = nom_med;
@@ -24,21 +24,32 @@ public class reservation_med {
         this.id_phar = id_phar;
     }
 
-    public int getId() {
+    
+    
+
+    public reservation_med(String id_med, String nom_med, String id_patient, String id_phar) {
+        this.id_med = id_med;
+        this.nom_med = nom_med;
+        this.id_patient = id_patient;
+        this.id_phar = id_phar;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
+
+
+
 
     public String getId_med() {
         return id_med;
     }
 
-    public void setId_med(String id_med) {
-        this.id_med = id_med;
-    }
+  
 
     public String getNom_med() {
         return nom_med;
@@ -88,5 +99,8 @@ public class reservation_med {
     public String toString() {
         return "reservation_med{" + "id=" + id + ", id_med=" + id_med + ", nom_med=" + nom_med + ", id_patient=" + id_patient + ", id_phar=" + id_phar + '}';
     }
-        
+
+  
+
+   
 }
